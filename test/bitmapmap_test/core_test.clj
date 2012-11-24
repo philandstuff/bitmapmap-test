@@ -1,6 +1,5 @@
 (ns bitmapmap-test.core-test
-  (:use clojure.test
-        bitmapmap-test.core))
+  (:use clojure.test))
 
 (defmacro time-taken
   "Evaluates expr and prints and returns the time it took, in msec."
