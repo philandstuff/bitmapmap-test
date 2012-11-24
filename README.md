@@ -4,9 +4,11 @@ Performance tests for cgrand/clojure#bitmapmap
 
 ## Usage
 
-Build cgrand/clojure#bitmapmap as clojure 1.5.0-bitmapmap-SNAPSHOT and install into your local repository.
+Checkout https://github.com/cgrand/clojure/tree/bitmapmap
 
-Run lein test.
+Change the pom.xml version to 1.5.0-bitmapmap-SNAPSHOT, and run `mvn install` to install the jar into your local repository.
+
+Run lein test from this repo.
 
 ## License
 
