@@ -16,6 +16,12 @@
     (time-taken (dotimes [_ ntimes]
                   (get m k)))))
 
+(defn test-assoc [k]
+  (fn [name m ntimes]
+    (print \tab name \tab)
+    (time-taken (dotimes [_ ntimes]
+                  (assoc m k "42")))))
+
 (defn test-maps [name args testfn]
   (let [am (apply array-map args)
         bm (apply bitmap-map args)
@@ -49,3 +55,17 @@
     (let [args (mapargs size)
           key  (last (butlast args))]
       (test-maps "get with identical key" args (test-get key)))))
+
+(deftest assoc-existing-key-test
+  (test-maps "assoc with nonidentical key" (mapargs 3) (test-assoc (vector "2")))
+  (test-maps "assoc with nonidentical key" (mapargs 4) (test-assoc (vector "3")))
+  (test-maps "assoc with nonidentical key" (mapargs 5) (test-assoc (vector "4")))
+  (doseq [size [3 4 5]]
+    (let [args (mapargs size)
+          key  (last (butlast args))]
+      (test-maps "assoc with identical key" args (test-assoc key)))))
+
+(deftest assoc-new-key-test
+  (test-maps "assoc with new key" (mapargs 3) (test-assoc (vector "foo")))
+  (test-maps "assoc with new key" (mapargs 4) (test-assoc (vector "foo")))
+  (test-maps "assoc with new key" (mapargs 5) (test-assoc (vector "foo"))))
