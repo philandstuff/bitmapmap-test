@@ -47,25 +47,58 @@
   (mapcat (juxt (comp vector str) identity)
           (range size)))
 
-(deftest get-test
-  (test-maps "get with nonidentical key" (mapargs 3) (test-get (vector "2")))
-  (test-maps "get with nonidentical key" (mapargs 4) (test-get (vector "3")))
-  (test-maps "get with nonidentical key" (mapargs 5) (test-get (vector "4")))
-  (doseq [size [3 4 5]]
-    (let [args (mapargs size)
-          key  (last (butlast args))]
-      (test-maps "get with identical key" args (test-get key)))))
+(defn keyword-mapargs [size]
+  (mapcat (juxt (comp keyword #(str "k" %)) identity)
+          (range size)))
 
-(deftest assoc-existing-key-test
-  (test-maps "assoc with nonidentical key" (mapargs 3) (test-assoc (vector "2")))
-  (test-maps "assoc with nonidentical key" (mapargs 4) (test-assoc (vector "3")))
-  (test-maps "assoc with nonidentical key" (mapargs 5) (test-assoc (vector "4")))
-  (doseq [size [3 4 5]]
-    (let [args (mapargs size)
+(deftest get-test-start
+  (test-maps "get with nonidentical key at start" (mapargs 1) (test-get (vector "0")))
+  (test-maps "get with nonidentical key at start" (mapargs 2) (test-get (vector "0")))
+  (test-maps "get with nonidentical key at start" (mapargs 3) (test-get (vector "0")))
+  (test-maps "get with nonidentical key at start" (mapargs 4) (test-get (vector "0")))
+  (test-maps "get with nonidentical key at start" (mapargs 5) (test-get (vector "0")))
+  (doseq [size [1 2 3 4 5]]
+    (let [args (keyword-mapargs size)
+          key  (first args)]
+      (test-maps "get with identical keyword key at start" args (test-get key)))))
+
+(deftest get-test-end
+  (test-maps "get with nonidentical key at end" (mapargs 2) (test-get (vector "1")))
+  (test-maps "get with nonidentical key at end" (mapargs 3) (test-get (vector "2")))
+  (test-maps "get with nonidentical key at end" (mapargs 4) (test-get (vector "3")))
+  (test-maps "get with nonidentical key at end" (mapargs 5) (test-get (vector "4")))
+  (doseq [size [2 3 4 5]]
+    (let [args (keyword-mapargs size)
           key  (last (butlast args))]
-      (test-maps "assoc with identical key" args (test-assoc key)))))
+      (test-maps "get with identical keyword key at end" args (test-get key)))))
+
+(deftest assoc-existing-key-test-start
+  (test-maps "assoc with nonidentical key at start" (mapargs 1) (test-assoc (vector "0")))
+  (test-maps "assoc with nonidentical key at start" (mapargs 2) (test-assoc (vector "0")))
+  (test-maps "assoc with nonidentical key at start" (mapargs 3) (test-assoc (vector "0")))
+  (test-maps "assoc with nonidentical key at start" (mapargs 4) (test-assoc (vector "0")))
+  (test-maps "assoc with nonidentical key at start" (mapargs 5) (test-assoc (vector "0")))
+  (doseq [size [1 2 3 4 5]]
+    (let [args (keyword-mapargs size)
+          key  (first args)]
+      (test-maps "assoc with identical keyword key at start" args (test-assoc key)))))
+
+(deftest assoc-existing-key-test-end
+  (test-maps "assoc with nonidentical key at end" (mapargs 2) (test-assoc (vector "1")))
+  (test-maps "assoc with nonidentical key at end" (mapargs 3) (test-assoc (vector "2")))
+  (test-maps "assoc with nonidentical key at end" (mapargs 4) (test-assoc (vector "3")))
+  (test-maps "assoc with nonidentical key at end" (mapargs 5) (test-assoc (vector "4")))
+  (doseq [size [2 3 4 5]]
+    (let [args (keyword-mapargs size)
+          key  (last (butlast args))]
+      (test-maps "assoc with identical keyword key at end" args (test-assoc key)))))
 
 (deftest assoc-new-key-test
-  (test-maps "assoc with new key" (mapargs 3) (test-assoc (vector "foo")))
-  (test-maps "assoc with new key" (mapargs 4) (test-assoc (vector "foo")))
-  (test-maps "assoc with new key" (mapargs 5) (test-assoc (vector "foo"))))
+  (doseq [size [1 2 3 4 5]]
+    (let [args (mapargs size)
+          key  (vector "foo")]
+      (test-maps "assoc with new key, with vector keys" args (test-assoc key))))
+  (doseq [size [1 2 3 4 5]]
+    (let [args (keyword-mapargs size)
+          key  :foo]
+      (test-maps "assoc with new key, with keyword keys" args (test-assoc key)))))
